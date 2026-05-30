@@ -7,6 +7,7 @@ import {
   FiMenu,
   FiChevronDown,
   FiLogOut,
+  FiMapPin,
 } from "react-icons/fi";
 
 import { useState } from "react";
@@ -170,6 +171,14 @@ export default function Navbar() {
                   <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     0
                   </span>
+                </Link>
+
+                <Link
+                  to="/addresses"
+                  className="text-gray-500 hover:text-brand-600 transition-colors"
+                  title="My Addresses"
+                >
+                  <FiMapPin className="h-6 w-6" />
                 </Link>
 
                 <Link
@@ -382,6 +391,15 @@ export default function Navbar() {
                         </span>
                       </div>
                       <span className="text-xs">Cart</span>
+                    </Link>
+
+                    <Link
+                      to="/addresses"
+                      onClick={closeMenus}
+                      className="text-gray-500 hover:text-brand-600 flex flex-col items-center"
+                    >
+                      <FiMapPin className="h-6 w-6 mb-1" />
+                      <span className="text-xs">Address</span>
                     </Link>
 
                     <Link

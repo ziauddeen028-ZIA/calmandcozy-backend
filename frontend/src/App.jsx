@@ -15,6 +15,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Wishlist from './pages/Wishlist';
 import Profile from './pages/Profile';
+import Addresses from './pages/Addresses';
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
             <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
             <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="addresses" element={<ProtectedRoute><Addresses /></ProtectedRoute>} />
           </Route>
 
           {/* Auth Layout routes */}
