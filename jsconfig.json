@@ -1,8 +1,13 @@
 {
   "compilerOptions": {
-    "moduleResolution": "nodenext",
     "target": "ES2021",
-    "checkJs": true,
-    "allowJs": true
-  }
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": [
+    "src"
+  ]
 }

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FiSearch,
   FiShoppingCart,
@@ -6,12 +6,29 @@ import {
   FiUser,
   FiMenu,
   FiChevronDown,
+  FiLogOut,
 } from "react-icons/fi";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../hooks/useAuth";
+
+function AvatarCircle({ letter, size = 'md' }) {
+  const sizeClasses = size === 'sm'
+    ? 'h-7 w-7 text-xs'
+    : 'h-8 w-8 text-sm';
+  return (
+    <span
+      className={`inline-flex items-center justify-center rounded-full bg-brand-600 text-white font-semibold ${sizeClasses} ring-2 ring-brand-100 select-none`}
+    >
+      {letter}
+    </span>
+  );
+}
 
 export default function Navbar() {
+  const { user, customer, signOut } = useAuth();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] =
     useState(false);
@@ -19,6 +36,12 @@ export default function Navbar() {
   const closeMenus = () => {
     setIsMobileMenuOpen(false);
     setIsMobileCategoriesOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    closeMenus();
+    navigate('/');
   };
 
   return (
@@ -129,31 +152,62 @@ export default function Navbar() {
 
           {/* Desktop Icons */}
           <div className="hidden md:flex items-center space-x-6">
+            {user ? (
+              <>
+                <Link
+                  to="/wishlist"
+                  className="text-gray-500 hover:text-brand-600 transition-colors"
+                >
+                  <FiHeart className="h-6 w-6" />
+                </Link>
 
-            <Link
-              to="/wishlist"
-              className="text-gray-500 hover:text-brand-600 transition-colors"
-            >
-              <FiHeart className="h-6 w-6" />
-            </Link>
+                <Link
+                  to="/cart"
+                  className="text-gray-500 hover:text-brand-600 transition-colors relative"
+                >
+                  <FiShoppingCart className="h-6 w-6" />
 
-            <Link
-              to="/cart"
-              className="text-gray-500 hover:text-brand-600 transition-colors relative"
-            >
-              <FiShoppingCart className="h-6 w-6" />
+                  <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    0
+                  </span>
+                </Link>
 
-              <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
-            </Link>
-
-            <Link
-              to="/profile"
-              className="text-gray-500 hover:text-brand-600 transition-colors"
-            >
-              <FiUser className="h-6 w-6" />
-            </Link>
+                <Link
+                  to="/profile"
+                  className="text-gray-500 hover:text-brand-600 transition-colors"
+                  title="My Profile"
+                >
+                  {customer?.avatar_letter ? (
+                    <AvatarCircle letter={customer.avatar_letter} />
+                  ) : (
+                    <FiUser className="h-6 w-6" />
+                  )}
+                </Link>
+                
+                <button
+                  onClick={handleLogout}
+                  className="text-gray-500 hover:text-brand-600 transition-colors"
+                  title="Logout"
+                >
+                  <FiLogOut className="h-6 w-6" />
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/login"
+                  className="text-gray-600 hover:text-brand-600 font-medium transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-brand-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-brand-700 transition-colors shadow-sm"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -302,42 +356,73 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* Mobile Icons */}
+              {/* Mobile Icons / Auth */}
               <div className="flex justify-around py-4 border-t border-gray-200 mt-4">
+                {user ? (
+                  <>
+                    <Link
+                      to="/wishlist"
+                      onClick={closeMenus}
+                      className="text-gray-500 hover:text-brand-600 flex flex-col items-center"
+                    >
+                      <FiHeart className="h-6 w-6 mb-1" />
+                      <span className="text-xs">Wishlist</span>
+                    </Link>
 
-                <Link
-                  to="/wishlist"
-                  onClick={closeMenus}
-                  className="text-gray-500 hover:text-brand-600 flex flex-col items-center"
-                >
-                  <FiHeart className="h-6 w-6 mb-1" />
-                  <span className="text-xs">Wishlist</span>
-                </Link>
+                    <Link
+                      to="/cart"
+                      onClick={closeMenus}
+                      className="text-gray-500 hover:text-brand-600 flex flex-col items-center relative"
+                    >
+                      <div className="relative">
+                        <FiShoppingCart className="h-6 w-6 mb-1" />
 
-                <Link
-                  to="/cart"
-                  onClick={closeMenus}
-                  className="text-gray-500 hover:text-brand-600 flex flex-col items-center relative"
-                >
-                  <div className="relative">
-                    <FiShoppingCart className="h-6 w-6 mb-1" />
+                        <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                          0
+                        </span>
+                      </div>
+                      <span className="text-xs">Cart</span>
+                    </Link>
 
-                    <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                      0
-                    </span>
+                    <Link
+                      to="/profile"
+                      onClick={closeMenus}
+                      className="text-gray-500 hover:text-brand-600 flex flex-col items-center"
+                    >
+                      {customer?.avatar_letter ? (
+                        <AvatarCircle letter={customer.avatar_letter} size="sm" />
+                      ) : (
+                        <FiUser className="h-6 w-6 mb-1" />
+                      )}
+                      <span className="text-xs mt-1">Profile</span>
+                    </Link>
+                    
+                    <button
+                      onClick={handleLogout}
+                      className="text-gray-500 hover:text-brand-600 flex flex-col items-center"
+                    >
+                      <FiLogOut className="h-6 w-6 mb-1" />
+                      <span className="text-xs">Logout</span>
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col w-full px-4 space-y-3">
+                    <Link
+                      to="/login"
+                      onClick={closeMenus}
+                      className="w-full text-center py-2 border border-brand-600 text-brand-600 rounded-lg font-medium"
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={closeMenus}
+                      className="w-full text-center py-2 bg-brand-600 text-white rounded-lg font-medium shadow-sm"
+                    >
+                      Sign up
+                    </Link>
                   </div>
-
-                  <span className="text-xs">Cart</span>
-                </Link>
-
-                <Link
-                  to="/profile"
-                  onClick={closeMenus}
-                  className="text-gray-500 hover:text-brand-600 flex flex-col items-center"
-                >
-                  <FiUser className="h-6 w-6 mb-1" />
-                  <span className="text-xs">Profile</span>
-                </Link>
+                )}
               </div>
             </div>
           </motion.div>
