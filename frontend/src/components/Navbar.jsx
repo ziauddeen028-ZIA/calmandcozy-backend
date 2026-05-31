@@ -14,6 +14,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 
 function AvatarCircle({ letter, size = 'md' }) {
   const sizeClasses = size === 'sm'
@@ -31,6 +32,7 @@ function AvatarCircle({ letter, size = 'md' }) {
 export default function Navbar() {
   const { user, customer, signOut } = useAuth();
   const { wishlistCount } = useWishlist();
+  const { cartTotalItems } = useCart();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] =
@@ -175,9 +177,11 @@ export default function Navbar() {
                 >
                   <FiShoppingCart className="h-6 w-6" />
 
-                  <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    0
-                  </span>
+                  {cartTotalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartTotalItems}
+                    </span>
+                  )}
                 </Link>
 
                 <Link
@@ -412,10 +416,11 @@ export default function Navbar() {
                     >
                       <div className="relative">
                         <FiShoppingCart className="h-6 w-6 mb-1" />
-
-                        <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                          0
-                        </span>
+                        {cartTotalItems > 0 && (
+                          <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {cartTotalItems}
+                          </span>
+                        )}
                       </div>
                       <span className="text-xs">Cart</span>
                     </Link>

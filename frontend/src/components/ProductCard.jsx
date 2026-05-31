@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { useAuth } from '../hooks/useAuth';
 import { useWishlist } from '../context/WishlistContext';
+import { useCart } from '../context/CartContext';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
 
 export default function ProductCard({ product }) {
   const { documentId, title, sellingPrice, actualPrice, category, images } = product;
   const { handleToggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   const inWishlist = isInWishlist(documentId);
 
@@ -80,9 +82,9 @@ export default function ProductCard({ product }) {
         <motion.button
           whileTap={{ scale: 0.95 }}
           className="w-full py-2.5 px-4 bg-gray-900 hover:bg-blue-600 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
-          onClick={() => {
-            // Add to cart logic will go here
-            console.log('Added to cart:', title);
+          onClick={async (e) => {
+            e.preventDefault();
+            await addToCart(documentId, 1);
           }}
         >
           <FiShoppingCart className="w-4 h-4" />

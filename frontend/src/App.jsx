@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
+import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthLayout from './components/AuthLayout';
 import MainLayout from './layouts/MainLayout';
@@ -22,8 +23,9 @@ import ScrollToTop from "./components/ScrollToTop";
 function App() {
   return (
     <AuthProvider>
-      <WishlistProvider>
-        <BrowserRouter>
+      <CartProvider>
+        <WishlistProvider>
+          <BrowserRouter>
           <ScrollToTop />
         <Toaster position="top-center" />
         <Routes>
@@ -51,7 +53,8 @@ function App() {
           </Route>
         </Routes>
         </BrowserRouter>
-      </WishlistProvider>
+        </WishlistProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }

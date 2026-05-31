@@ -3,16 +3,18 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { FiShoppingCart, FiTrash2 } from 'react-icons/fi';
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 
 const Wishlist = () => {
   const { wishlist, loading, removeFromWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   const handleAddToCart = async (product, wishlistDocumentId) => {
-    // Add to cart logic will go here
-    console.log('Added to cart:', product.title);
-    toast.success('Added to Cart 🛒', { duration: 1500 });
-    // Optionally remove from wishlist after adding to cart
-    // await removeFromWishlist(wishlistDocumentId);
+    const success = await addToCart(product.documentId, 1);
+    if (success) {
+      // Remove from wishlist after adding to cart, as per common UX
+      await removeFromWishlist(wishlistDocumentId);
+    }
   };
 
   if (loading) {
