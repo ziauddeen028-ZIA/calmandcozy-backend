@@ -84,6 +84,71 @@ export default function ProductDetails() {
     }
   };
 
+  const generatePreviewCanvas = async (tshirtUrl, logoUrl, text) => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 800;
+      canvas.height = 800;
+
+      const img1 = new Image();
+      img1.crossOrigin = "anonymous";
+      img1.src = tshirtUrl;
+      img1.onload = () => {
+        const hRatio = canvas.width / img1.width;
+        const vRatio = canvas.height / img1.height;
+        const ratio = Math.min(hRatio, vRatio);
+        const centerShift_x = (canvas.width - img1.width * ratio) / 2;
+        const centerShift_y = (canvas.height - img1.height * ratio) / 2;
+        ctx.fillStyle = '#f9fafb';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img1, 0, 0, img1.width, img1.height,
+          centerShift_x, centerShift_y, img1.width * ratio, img1.height * ratio);
+
+        const finishCanvas = () => {
+          if (text) {
+            ctx.fillStyle = '#111827';
+            ctx.font = '900 48px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2 + (logoUrl ? 80 : 0));
+          }
+          canvas.toBlob((blob) => {
+            resolve(blob);
+          }, 'image/png');
+        };
+
+        if (logoUrl) {
+          const img2 = new Image();
+          img2.crossOrigin = "anonymous";
+          img2.src = logoUrl;
+          img2.onload = () => {
+            const maxLogoWidth = canvas.width * 0.4;
+            const maxLogoHeight = canvas.height * 0.4;
+            const logoHRatio = maxLogoWidth / img2.width;
+            const logoVRatio = maxLogoHeight / img2.height;
+            const logoRatio = Math.min(logoHRatio, logoVRatio);
+
+            const logoW = img2.width * logoRatio;
+            const logoH = img2.height * logoRatio;
+
+            const logoX = (canvas.width - logoW) / 2;
+            const logoY = (canvas.height - logoH) / 2 - (text ? 40 : 0);
+
+            ctx.drawImage(img2, logoX, logoY, logoW, logoH);
+            finishCanvas();
+          };
+          img2.onerror = () => finishCanvas();
+        } else {
+          finishCanvas();
+        }
+      };
+      img1.onerror = () => {
+        resolve(null);
+      }
+    });
+  };
+
   const handleAddToCart = async () => {
     if (product.stock <= 0) return;
 
@@ -94,19 +159,43 @@ export default function ProductDetails() {
       }
 
       let uploadedImageUrl = null;
-      if (uploadedImageFile) {
+      let previewImageUrl = null;
+      let previewImageId = null;
+
+      if (uploadedImageFile || customText) {
         setIsUploading(true);
         try {
-          const formData = new FormData();
-          formData.append('files', uploadedImageFile);
-          const uploadRes = await api.post('/upload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          });
-          uploadedImageUrl = uploadRes.data[0].url;
+          if (uploadedImageFile) {
+            const formData = new FormData();
+            formData.append('files', uploadedImageFile);
+            const uploadRes = await api.post('/upload', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            uploadedImageUrl = uploadRes.data[0].url;
+          }
+
+          if (activeImage) {
+            const previewBlob = await generatePreviewCanvas(
+              getImageUrl(activeImage),
+              uploadedImagePreview,
+              customText
+            );
+
+            if (previewBlob) {
+              const previewFile = new File([previewBlob], 'preview.png', { type: 'image/png' });
+              const previewFormData = new FormData();
+              previewFormData.append('files', previewFile);
+              const previewRes = await api.post('/upload', previewFormData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+              });
+              previewImageUrl = previewRes.data[0].url;
+              previewImageId = previewRes.data[0].id;
+            }
+          }
         } catch (err) {
           console.error(err);
           setIsUploading(false);
-          return toast.error('Failed to upload image');
+          return toast.error('Failed to upload image or generate preview');
         }
         setIsUploading(false);
       }
@@ -116,6 +205,8 @@ export default function ProductDetails() {
         selectedSize,
         customText,
         uploadedImageUrl,
+        previewImageUrl,
+        previewImageId,
       };
 
       addToCart(product.documentId, 1, customization);
@@ -165,8 +256,26 @@ export default function ProductDetails() {
               {images.map((img) => (
                 <button
                   key={img.id}
-                  onClick={() => setActiveImage(img.url)}
-                  className={`relative w-20 h-20 sm:w-full sm:h-24 rounded-lg overflow-hidden border-2 transition-colors ${activeImage === img.url ? 'border-indigo-600' : 'border-transparent hover:border-gray-300'
+                  onClick={() => {
+                    setActiveImage(img.url);
+
+                    const imgName = img.name?.toLowerCase() || '';
+
+                    if (imgName.includes('blue')) {
+                      setSelectedColor('Blue');
+                    } else if (imgName.includes('red')) {
+                      setSelectedColor('Red');
+                    } else if (imgName.includes('green')) {
+                      setSelectedColor('Green');
+                    } else if (imgName.includes('white')) {
+                      setSelectedColor('White');
+                    } else if (imgName.includes('black')) {
+                      setSelectedColor('Black');
+                    }
+                  }}
+                  className={`relative w-20 h-20 sm:w-full sm:h-24 rounded-lg overflow-hidden border-2 transition-colors ${activeImage === img.url
+                      ? 'border-indigo-600'
+                      : 'border-transparent hover:border-gray-300'
                     }`}
                 >
                   <img
@@ -187,7 +296,7 @@ export default function ProductDetails() {
               <img
                 src={getImageUrl(activeImage)}
                 alt={title}
-                className="w-full h-full object-contain transition-all"
+                className="w-full h-full object-contain transition-all p-4"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400">

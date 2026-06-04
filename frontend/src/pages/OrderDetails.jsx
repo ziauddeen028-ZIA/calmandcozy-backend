@@ -42,7 +42,7 @@ export default function OrderDetails() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8 flex items-center gap-4">
-        <button 
+        <button
           onClick={() => navigate('/orders')}
           className="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition-colors"
         >
@@ -78,18 +78,31 @@ export default function OrderDetails() {
           <div className="space-y-6">
             {order.orderItems?.map((item, idx) => (
               <div key={idx} className="flex gap-4">
-                {item.productImage ? (
-                  <img 
-                    src={`${import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337'}${item.productImage}`} 
+                {item.previewImageUrl ? (
+                  <img
+                    src={
+                      item.previewImageUrl?.startsWith("http")
+                        ? item.previewImageUrl
+                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.previewImageUrl}`
+                    }
                     alt={item.productName}
-                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border border-gray-200 bg-gray-50"
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-contain bg-white border border-gray-200"
+                  />
+                ) : item.productImage ? (
+                  <img
+                    src={
+                      item.productImage?.startsWith("http")
+                        ? item.productImage
+                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.productImage}`
+                    }
+                    alt={item.productName}
                   />
                 ) : (
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl border border-gray-200 bg-gray-50 flex items-center justify-center">
                     <FiPackage className="text-gray-400 h-6 w-6" />
                   </div>
                 )}
-                
+
                 <div className="flex-1 flex flex-col justify-center">
                   <div className="flex justify-between items-start">
                     <div>
@@ -102,7 +115,15 @@ export default function OrderDetails() {
                           {item.uploadedImageUrl && (
                             <div className="flex items-center gap-2 mt-1">
                               <span>Image:</span>
-                              <img src={`${import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337'}${item.uploadedImageUrl}`} alt="Custom" className="h-8 w-8 object-cover rounded border border-gray-200 bg-white" />
+                              <img
+                                src={
+                                  item.uploadedImageUrl.startsWith("http")
+                                    ? item.uploadedImageUrl
+                                    : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.uploadedImageUrl}`
+                                }
+                                alt="Custom"
+                                className="h-8 w-8 object-cover rounded border border-gray-200 bg-white"
+                              />
                             </div>
                           )}
                         </div>

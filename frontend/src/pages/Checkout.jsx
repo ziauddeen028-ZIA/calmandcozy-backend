@@ -54,11 +54,11 @@ export default function Checkout() {
       toast.error("Please select a delivery address");
       return;
     }
-    
+
     setIsPlacingOrder(true);
     try {
       const selectedAddr = addresses.find((a) => (a.documentId || a.id) === selectedAddressId);
-      
+
       const orderItems = cartItems.map(item => ({
         productId: item.product.documentId,
         productName: item.product.title,
@@ -68,7 +68,9 @@ export default function Checkout() {
         selectedColor: item.selectedColor,
         selectedSize: item.selectedSize,
         customText: item.customText,
-        uploadedImageUrl: item.uploadedImageUrl
+        uploadedImageUrl: item.uploadedImageUrl,
+        previewImageUrl: item.previewImageUrl,
+        previewImage: item.previewImageId,
       }));
 
       const shippingEstimate = 0;
@@ -88,7 +90,7 @@ export default function Checkout() {
 
       await createOrder(user.id, orderData);
       await clearCart();
-      
+
       toast.success("Order Placed Successfully!");
       navigate('/order-success');
     } catch (error) {
@@ -177,8 +179,8 @@ export default function Checkout() {
                       key={addrId}
                       onClick={() => setSelectedAddressId(addrId)}
                       className={`relative cursor-pointer rounded-xl border p-5 transition-all ${isSelected
-                          ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-sm'
-                          : 'border-gray-200 hover:border-brand-300 bg-white'
+                        ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-sm'
+                        : 'border-gray-200 hover:border-brand-300 bg-white'
                         }`}
                     >
                       {isSelected && (
@@ -222,10 +224,21 @@ export default function Checkout() {
             {/* Cart Items Preview */}
             <div className="mb-6 space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
               {cartItems.map((item) => {
+                console.log(item);
                 const product = item.product;
-                const imageUrl = product?.images?.[0]?.url
-                  ? `${STRAPI_URL}${product.images[0].url}`
-                  : "https://via.placeholder.com/300";
+                const imageUrl = item.previewImageUrl
+                  ? (
+                    item.previewImageUrl.startsWith("http")
+                      ? item.previewImageUrl
+                      : `${STRAPI_URL}${item.previewImageUrl}`
+                  )
+                  : product?.images?.[0]?.url
+                    ? (
+                      product.images[0].url.startsWith("http")
+                        ? product.images[0].url
+                        : `${STRAPI_URL}${product.images[0].url}`
+                    )
+                    : "https://via.placeholder.com/300";
 
                 return (
                   <div key={item.documentId} className="flex gap-4">

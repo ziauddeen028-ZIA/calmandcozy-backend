@@ -135,7 +135,7 @@ export default function Orders() {
                         <p className="font-bold text-gray-900">₹{order.total}</p>
                       </div>
                     </div>
-                    
+
                     <div className="p-6">
                       <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                         <div className="flex-1 w-full">
@@ -143,9 +143,23 @@ export default function Orders() {
                           <div className="flex flex-wrap gap-4">
                             {order.orderItems?.slice(0, 4).map((item, idx) => (
                               <div key={idx} className="relative group">
-                                {item.productImage ? (
-                                  <img 
-                                    src={`${import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337'}${item.productImage}`} 
+                                {item.previewImageUrl ? (
+                                  <img
+                                    src={
+                                      item.previewImageUrl?.startsWith("http")
+                                        ? item.previewImageUrl
+                                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.previewImageUrl}`
+                                    }
+                                    alt={item.productName}
+                                    className="w-16 h-16 rounded-lg object-contain bg-white border border-gray-200"
+                                  />
+                                ) : item.productImage ? (
+                                  <img
+                                    src={
+                                      item.productImage?.startsWith("http")
+                                        ? item.productImage
+                                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.productImage}`
+                                    }
                                     alt={item.productName}
                                     className="w-16 h-16 rounded-lg object-cover border border-gray-200"
                                   />
@@ -166,8 +180,8 @@ export default function Orders() {
                             )}
                           </div>
                         </div>
-                        
-                        <Link 
+
+                        <Link
                           to={`/order/${order.documentId}`}
                           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border-2 border-brand-100 text-brand-600 hover:bg-brand-50 rounded-xl font-medium transition-colors whitespace-nowrap"
                         >

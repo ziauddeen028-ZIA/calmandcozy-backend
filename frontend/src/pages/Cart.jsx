@@ -80,10 +80,21 @@ export default function Cart() {
         <div className="lg:col-span-8 space-y-4">
           {cartItems.map((item) => {
             const product = item.product;
-            const imageUrl = product?.images?.[0]?.url
-              ? `${STRAPI_URL}${product.images[0].url}`
-              : "https://via.placeholder.com/300";
-
+            const imageUrl = item.previewImageUrl
+            
+              ? (
+                item.previewImageUrl.startsWith("http")
+                  ? item.previewImageUrl
+                  : `${STRAPI_URL}${item.previewImageUrl}`
+              )
+              : product?.images?.[0]?.url
+                ? (
+                  product.images[0].url.startsWith("http")
+                    ? product.images[0].url
+                    : `${STRAPI_URL}${product.images[0].url}`
+                )
+                : "https://via.placeholder.com/300";
+            console.log(item);
             return (
               <div
                 key={item.documentId}
@@ -110,15 +121,36 @@ export default function Cart() {
                     </span>
 
                     {/* Customizations */}
-                    {(item.selectedColor || item.selectedSize || item.customText || item.uploadedImageUrl) && (
+                    {(item.selectedColor || item.selectedSize || item.customText || item.uploadedImageUrl || item.previewImageUrl) && (
                       <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded-md space-y-1">
                         {item.selectedColor && <p>Color: <span className="font-semibold">{item.selectedColor}</span></p>}
                         {item.selectedSize && <p>Size: <span className="font-semibold">{item.selectedSize}</span></p>}
                         {item.customText && <p>Text: <span className="font-semibold">{item.customText}</span></p>}
-                        {item.uploadedImageUrl && (
+                        {item.previewImageUrl ? (
+                          <div className="flex items-center gap-2 mt-1">
+                            <span>Preview:</span>
+                            <img
+                              src={
+                                item.previewImageUrl?.startsWith("http")
+                                  ? item.previewImageUrl
+                                  : `${STRAPI_URL}${item.previewImageUrl}`
+                              }
+                              alt="Preview"
+                              className="h-12 w-12 object-contain rounded border border-gray-200 bg-white"
+                            />
+                          </div>
+                        ) : item.uploadedImageUrl && (
                           <div className="flex items-center gap-2 mt-1">
                             <span>Image:</span>
-                            <img src={`${STRAPI_URL}${item.uploadedImageUrl}`} alt="Custom" className="h-8 w-8 object-cover rounded border border-gray-200 bg-white" />
+                            <img
+                              src={
+                                item.uploadedImageUrl?.startsWith("http")
+                                  ? item.uploadedImageUrl
+                                  : `${STRAPI_URL}${item.uploadedImageUrl}`
+                              }
+                              alt="Custom"
+                              className="h-8 w-8 object-cover rounded border border-gray-200 bg-white"
+                            />
                           </div>
                         )}
                       </div>
