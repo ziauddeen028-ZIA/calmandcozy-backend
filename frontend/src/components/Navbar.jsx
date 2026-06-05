@@ -7,14 +7,16 @@ import {
   FiMenu,
   FiChevronDown,
   FiLogOut,
-  FiMapPin,
+  FiMapPin, FiShoppingBag,
 } from "react-icons/fi";
+
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
+import logoImg from "../assets/Black logo.PNG";
 
 function AvatarCircle({ letter, size = 'md' }) {
   const sizeClasses = size === 'sm'
@@ -68,9 +70,9 @@ export default function Navbar() {
           <div className="flex-shrink-0 flex items-center">
             <Link
               to="/"
-              className="text-2xl font-bold text-brand-600"
+              className="flex items-center"
             >
-              Calm&Cozy
+              <img src={logoImg} alt="Calm&Cozy" className="h-[80px] w-auto object-contain" />
             </Link>
           </div>
 
@@ -138,7 +140,7 @@ export default function Navbar() {
                 </Link>
 
                 <Link
-                  to="/shop?category=desk-pad"  
+                  to="/shop?category=desk-pad"
                   className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-600"
                 >
                   Desk Pad
@@ -212,7 +214,7 @@ export default function Navbar() {
                     <FiUser className="h-6 w-6" />
                   )}
                 </Link>
-                
+
                 <button
                   onClick={handleLogout}
                   className="text-gray-500 hover:text-brand-600 transition-colors"
@@ -241,6 +243,40 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4 md:hidden">
+            {user && (
+              <>
+
+                <Link
+                  to="/shop"
+                  className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-brand-600"
+                >
+                  <FiShoppingBag className="h-4 w-4" />
+                  Shop
+                </Link>
+                <Link
+                  to="/wishlist"
+                  className="text-gray-500 hover:text-brand-600 transition-colors relative"
+                >
+                  <FiHeart className="h-6 w-6" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  to="/cart"
+                  className="text-gray-500 hover:text-brand-600 transition-colors relative"
+                >
+                  <FiShoppingCart className="h-6 w-6" />
+                  {cartTotalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-brand-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                      {cartTotalItems}
+                    </span>
+                  )}
+                </Link>
+              </>
+            )}
             <button
               onClick={() =>
                 setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -297,8 +333,8 @@ export default function Navbar() {
 
                   <FiChevronDown
                     className={`transition-transform duration-200 ${isMobileCategoriesOpen
-                        ? "rotate-180"
-                        : ""
+                      ? "rotate-180"
+                      : ""
                       }`}
                   />
                 </button>
@@ -443,7 +479,7 @@ export default function Navbar() {
                       )}
                       <span className="text-xs mt-1">Profile</span>
                     </Link>
-                    
+
                     <button
                       onClick={handleLogout}
                       className="text-gray-500 hover:text-brand-600 flex flex-col items-center"

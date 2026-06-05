@@ -203,6 +203,15 @@ export default function ProductDetails() {
         if (!selectedColor && product.availableColors?.length > 0) return toast.error('Please select a color');
         if (!selectedSize && product.availableSizes?.length > 0) return toast.error('Please select a size');
       }
+      if (product.customizationType === 'mug') {
+        if (!selectedColor && product.availableColors?.length > 0) {
+          return toast.error('Please select a mug color');
+        }
+
+        if (!uploadedImageFile) {
+          return toast.error('Please upload an image');
+        }
+      }
 
       let uploadedImageUrl = null;
       let previewImageUrl = null;
@@ -584,12 +593,14 @@ export default function ProductDetails() {
                     return toast.error("Please select a size");
                   }
 
-                  if (
-                    product.customizationType === "mug" &&
-                    !selectedColor &&
-                    product.availableColors?.length > 0
-                  ) {
-                    return toast.error("Please select a mug color");
+                  if (product.customizationType === "mug") {
+                    if (!selectedColor && product.availableColors?.length > 0) {
+                      return toast.error("Please select a mug color");
+                    }
+
+                    if (!uploadedImageFile) {
+                      return toast.error("Please upload an image");
+                    }
                   }
                 }
 
