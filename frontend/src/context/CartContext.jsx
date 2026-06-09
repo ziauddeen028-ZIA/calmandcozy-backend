@@ -7,6 +7,7 @@ import {
   removeFromCart as apiRemoveFromCart, 
   clearCart as apiClearCart 
 } from '../lib/cartService';
+import { calculateCartTotals } from '../lib/pricingUtils';
 import toast from 'react-hot-toast';
 
 const CartContext = createContext({});
@@ -100,12 +101,15 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
   }, [cartItems]);
 
-  const cartSubtotal = useMemo(() => {
-    return cartItems.reduce((total, item) => {
-      const price = item.product?.sellingPrice || item.product?.price || 0;
-      return total + (price * (item.quantity || 1));
-    }, 0);
+  const cartTotals = useMemo(() => {
+    return calculateCartTotals(cartItems);
   }, [cartItems]);
+
+  const cartSubtotal = cartTotals.finalSubtotal;
+  const rawSubtotal = cartTotals.rawSubtotal;
+  const totalSavings = cartTotals.totalSavings;
+  const bundleMessages = cartTotals.bundleMessages;
+  const appliedBundles = cartTotals.appliedBundles;
 
   return (
     <CartContext.Provider value={{
@@ -116,7 +120,11 @@ export const CartProvider = ({ children }) => {
       removeFromCart,
       clearCart,
       cartTotalItems,
-      cartSubtotal
+      cartSubtotal,
+      rawSubtotal,
+      totalSavings,
+      bundleMessages,
+      appliedBundles
     }}>
       {children}
     </CartContext.Provider>

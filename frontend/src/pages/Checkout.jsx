@@ -296,14 +296,14 @@ export default function Checkout() {
                       className="h-16 w-16 rounded-lg object-cover bg-white border border-gray-100"
                     />
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-900 line-clamp-1">{product.title}</p>
+                      <p className="text-sm font-semibold text-gray-900 line-clamp-1 font-satoshi">{product.title}</p>
                       {(item.selectedColor || item.selectedSize || item.customText) && (
                         <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
                           {[item.selectedColor, item.selectedSize, item.customText].filter(Boolean).join(' | ')}
                         </p>
                       )}
                       <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                      <p className="text-sm font-medium text-gray-900 mt-1">
+                      <p className="text-sm font-medium text-gray-900 mt-1 font-satoshi">
                         ₹{(product.sellingPrice || product.price) * item.quantity}
                       </p>
                     </div>
@@ -316,17 +316,17 @@ export default function Checkout() {
             <div className="space-y-3 text-sm text-gray-600 border-t border-gray-200 pt-4">
               <div className="flex justify-between">
                 <span>Items ({cartTotalItems})</span>
-                <span className="font-medium text-gray-900">₹{cartSubtotal.toFixed(2)}</span>
+                <span className="font-medium text-gray-900 font-satoshi">₹{cartSubtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-gray-900 font-satoshi">
                   {shippingEstimate === 0 ? "Free" : `₹${shippingEstimate.toFixed(2)}`}
                 </span>
               </div>
 
               <div className="border-t border-gray-200 pt-4 mt-4">
-                <div className="flex justify-between items-center text-lg font-bold text-gray-900">
+                <div className="flex justify-between items-center text-lg font-bold text-gray-900 font-satoshi">
                   <span>Total</span>
                   <span>₹{grandTotal.toFixed(2)}</span>
                 </div>

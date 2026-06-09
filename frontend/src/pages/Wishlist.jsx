@@ -61,13 +61,13 @@ const Wishlist = () => {
 
                 <div className="p-4 flex flex-col flex-grow">
                   <Link to={`/product/${product.documentId}`}>
-                    <h3 className="line-clamp-2 text-lg font-semibold hover:text-brand-600 transition-colors">
+                    <h3 className="line-clamp-2 text-lg font-semibold hover:text-brand-600 transition-colors font-satoshi">
                       {product?.title}
                     </h3>
                   </Link>
 
                   <div className="mt-2 mb-4 flex items-center justify-between">
-                    <span className="text-xl font-bold text-gray-900">
+                    <span className="text-xl font-bold text-gray-900 font-satoshi">
                       ₹{product?.sellingPrice || product?.price}
                     </span>
                   </div>

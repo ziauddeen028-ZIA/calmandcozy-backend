@@ -321,7 +321,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 {/* Text Side */}
                 <div className="p-8 sm:p-12 lg:p-20 flex flex-col justify-center relative z-10 text-white">
-                  <div className="text-blue-300 font-semibold tracking-wider uppercase text-xs sm:text-sm mb-3 sm:mb-4">
+                  <div className="text-blue-300 font-semibold tracking-wider uppercase text-xs sm:text-sm mb-3 sm:mb-4 font-satoshi">
                     Featured Essential
                   </div>
                   <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
@@ -333,7 +333,7 @@ export default function Home() {
                   <div>
                     <Link
                       to={`/product/${homepageFeaturedProduct.documentId}`}
-                      className="inline-flex items-center justify-center px-7 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-blue-900 bg-white hover:bg-gray-100 rounded-full shadow-lg transition-all hover:-translate-y-0.5"
+                      className="inline-flex items-center justify-center px-7 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-blue-900 bg-white hover:bg-gray-100 rounded-full shadow-lg transition-all hover:-translate-y-0.5 font-satoshi"
                     >
                       Shop Now — ₹{homepageFeaturedProduct.sellingPrice}
                     </Link>

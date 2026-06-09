@@ -21,6 +21,10 @@ import Addresses from './pages/Addresses';
 import Orders from './pages/Orders';
 import OrderDetails from './pages/OrderDetails';
 import OrderSuccess from './pages/OrderSuccess';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsAndConditions from './pages/TermsAndConditions';
+import RefundPolicy from './pages/RefundPolicy';
+import ShippingPolicy from './pages/ShippingPolicy';
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
@@ -38,6 +42,10 @@ function App() {
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
             <Route path="product/:id" element={<ProductDetails />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="terms" element={<TermsAndConditions />} />
+            <Route path="refund-policy" element={<RefundPolicy />} />
+            <Route path="shipping-policy" element={<ShippingPolicy />} />
             
             {/* Protected Routes */}
             <Route path="cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />

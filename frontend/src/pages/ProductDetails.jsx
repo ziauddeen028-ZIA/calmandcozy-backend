@@ -337,7 +337,7 @@ export default function ProductDetails() {
     );
   }
 
-  const { title, description, sellingPrice, actualPrice, category, stock, images } = product;
+  const { title, description, sellingPrice, actualPrice, category, stock, images, bundleOfferEnabled, bundleQty, bundlePrice } = product;
   const galleryImages = images?.slice(1) || [];
   const inWishlist = isInWishlist(product.documentId);
 
@@ -492,21 +492,31 @@ export default function ProductDetails() {
         {/* Product Info */}
         <div className="flex flex-col pt-0">
           <div className="mb-6">
-            <span className="text-sm text-indigo-600 font-semibold uppercase tracking-wider">
+            <span className="text-sm text-indigo-600 font-semibold uppercase tracking-wider font-satoshi">
               {category?.name || 'Uncategorized'}
             </span>
             <h1 className="mt-2 text-4xl font-bold text-gray-800 tracking-tight">
               {title}
             </h1>
+            {bundleOfferEnabled && (
+              <div className="inline-flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-4 bg-green-50 text-green-800 text-sm font-bold px-4 py-2.5 rounded-xl border border-green-200 shadow-sm">
+                <span className="flex items-center gap-2">
+                  <span className="text-base">🎁</span>
+                  Buy Any {bundleQty} {category?.name || 'Items'} for ₹{bundlePrice}
+                </span>
+                <span className="hidden sm:block text-green-300">|</span>
+                <span className="text-green-600 text-xs uppercase tracking-wider font-semibold">Bundle Offer</span>
+              </div>
+            )}
           </div>
 
           <div className="flex items-end gap-4 mb-6">
-            <span className="text-4xl font-bold text-gray-800">₹{sellingPrice}</span>
+            <span className="text-4xl font-bold text-gray-800 font-satoshi">₹{sellingPrice}</span>
             {actualPrice && actualPrice > sellingPrice && (
-              <span className="text-xl text-gray-400 line-through mb-1">₹{actualPrice}</span>
+              <span className="text-xl text-gray-400 line-through mb-1 font-satoshi">₹{actualPrice}</span>
             )}
             {actualPrice && actualPrice > sellingPrice && (
-              <span className="text-sm font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-md mb-1 ml-2">
+              <span className="text-sm font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-md mb-1 ml-2 font-satoshi">
                 Save ₹{actualPrice - sellingPrice}
               </span>
             )}

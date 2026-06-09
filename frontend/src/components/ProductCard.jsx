@@ -8,7 +8,7 @@ import { useCart } from '../context/CartContext';
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
 
 export default function ProductCard({ product }) {
-  const { documentId, title, sellingPrice, actualPrice, category, images, customizable } = product;
+  const { documentId, title, sellingPrice, actualPrice, category, images, customizable, bundleOfferEnabled, bundleQty, bundlePrice } = product;
   const { handleToggleWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
 
@@ -32,11 +32,11 @@ export default function ProductCard({ product }) {
 
   return (
     <motion.div
-      whileHover={{ y: customizable ? -7 : -5 }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ y: customizable ? -9 : -7 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       className={`bg-white rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 ${customizable
-          ? 'border-2 border-blue-500 shadow-[0_0_0_1px_#3b82f6,0_4px_24px_rgba(59,130,246,0.15)] hover:shadow-[0_0_0_2px_#2563eb,0_8px_32px_rgba(59,130,246,0.30)]'
-          : 'border border-gray-100 shadow-sm hover:shadow-xl'
+          ? 'border-2 border-blue-500 shadow-[0_0_0_1px_#3b82f6,0_4px_24px_rgba(59,130,246,0.15)] hover:shadow-[0_0_0_2px_#2563eb,0_12px_40px_rgba(59,130,246,0.35)]'
+          : 'border border-gray-100 shadow-sm hover:shadow-2xl'
         }`}
     >
       {/* Image */}
@@ -44,13 +44,26 @@ export default function ProductCard({ product }) {
         <img
           src={imageUrl}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           loading="lazy"
         />
         {/* CUSTOM badge */}
         {customizable && (
-          <div className="absolute top-3 left-3 flex items-center gap-1 bg-blue-700 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full shadow-md tracking-wide">
+          <div className="absolute top-3 left-3 flex items-center gap-1 bg-blue-700 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full shadow-md tracking-wide z-10">
             ✨ CUSTOM
+          </div>
+        )}
+        {/* Bundle badge */}
+        {bundleOfferEnabled && (
+          <div className={`absolute left-3 group/bundle flex items-center justify-center bg-black text-white px-3 py-1.5 rounded-full shadow-md z-10 cursor-pointer transition-all duration-300 hover:scale-[1.08] hover:-translate-y-[3px] hover:shadow-[0_0_15px_rgba(239,68,68,0.6)] ${customizable ? 'top-12' : 'top-3'}`}>
+            <span className="text-[10px] sm:text-xs font-black tracking-wider flex items-center gap-1">
+              <span className="text-sm">🔥</span> DEAL
+            </span>
+            <div className="absolute left-0 top-full mt-2 opacity-0 group-hover/bundle:opacity-100 transition-opacity duration-300 bg-gray-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded shadow-xl pointer-events-none whitespace-nowrap">
+              Buy {bundleQty} for ₹{bundlePrice}
+              {/* Arrow for tooltip */}
+              <div className="absolute -top-1 left-4 w-2 h-2 bg-gray-900 rotate-45"></div>
+            </div>
           </div>
         )}
         {/* Wishlist Button */}
@@ -70,7 +83,7 @@ export default function ProductCard({ product }) {
 
       {/* Info */}
       <div className="p-4 sm:p-5 flex flex-col flex-grow">
-        <div className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">
+        <div className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1 font-satoshi">
           {category?.name || 'Uncategorized'}
         </div>
 
@@ -84,9 +97,9 @@ export default function ProductCard({ product }) {
         </Link>
 
         <div className="flex items-center gap-2 mb-3 sm:mb-4 mt-auto">
-          <span className="text-base sm:text-xl font-bold text-gray-900">₹{sellingPrice}</span>
+          <span className="text-base sm:text-xl font-bold text-gray-900 font-satoshi">₹{sellingPrice}</span>
           {actualPrice && actualPrice > sellingPrice && (
-            <span className="text-xs sm:text-sm text-gray-400 line-through">₹{actualPrice}</span>
+            <span className="text-xs sm:text-sm text-gray-400 line-through font-satoshi">₹{actualPrice}</span>
           )}
         </div>
 

@@ -12,6 +12,10 @@ export default function Cart() {
     clearCart,
     cartTotalItems,
     cartSubtotal,
+    rawSubtotal,
+    totalSavings,
+    bundleMessages,
+    appliedBundles,
   } = useCart();
 
   const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
@@ -112,7 +116,7 @@ export default function Cart() {
                   <div className="flex flex-col gap-1">
                     <Link
                       to={`/product/${product.documentId}`}
-                      className="text-lg font-semibold text-gray-900 hover:text-brand-600 transition-colors"
+                      className="text-lg font-semibold text-gray-900 hover:text-brand-600 transition-colors font-satoshi"
                     >
                       {product.title}
                     </Link>
@@ -159,7 +163,7 @@ export default function Cart() {
                       </div>
                     )}
 
-                    <span className="mt-2 text-lg font-bold text-gray-900">
+                    <span className="mt-2 text-lg font-bold text-gray-900 font-satoshi">
                       ₹{product.sellingPrice || product.price}
                     </span>
                   </div>
@@ -215,24 +219,62 @@ export default function Cart() {
               </div>
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="font-semibold text-gray-900">
-                  ₹{cartSubtotal.toFixed(2)}
+                <span className={`${totalSavings > 0 ? 'line-through text-gray-400' : 'font-semibold text-gray-900'} font-satoshi`}>
+                  ₹{(rawSubtotal || cartSubtotal).toFixed(2)}
                 </span>
               </div>
+              {totalSavings > 0 && (
+                <>
+                  <div className="flex justify-between text-green-600">
+                    <span>Bundle Savings</span>
+                    <span className="font-semibold font-satoshi">
+                      -₹{totalSavings.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between font-medium text-gray-900 pt-2 border-t border-gray-100">
+                    <span>New Subtotal</span>
+                    <span className="font-semibold font-satoshi">
+                      ₹{cartSubtotal.toFixed(2)}
+                    </span>
+                  </div>
+                </>
+              )}
               <div className="flex justify-between">
                 <span>Shipping estimate</span>
-                <span className="font-semibold text-gray-900">
+                <span className="font-semibold text-gray-900 font-satoshi">
                   {shippingEstimate === 0 ? "Free" : `₹${shippingEstimate.toFixed(2)}`}
                 </span>
               </div>
 
               <div className="border-t border-gray-200 pt-4 mt-4">
-                <div className="flex justify-between items-center text-lg font-bold text-gray-900">
+                <div className="flex justify-between items-center text-lg font-bold text-gray-900 font-satoshi">
                   <span>Grand Total</span>
                   <span>₹{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
+
+            {appliedBundles?.length > 0 && (
+              <div className="mt-6 space-y-2">
+                {appliedBundles.map((bundle, idx) => (
+                  <div key={idx} className="text-xs font-medium text-green-700 bg-green-50 px-3 py-2 rounded-lg flex items-start gap-2">
+                    <span className="mt-0.5">🎉</span>
+                    <span>{bundle.message}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {bundleMessages?.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {bundleMessages.map((msg, idx) => (
+                  <div key={idx} className="text-xs font-medium text-brand-700 bg-brand-50 px-3 py-2 rounded-lg flex items-start gap-2">
+                    <span className="mt-0.5">ℹ️</span>
+                    <span>{msg}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <Link
               to="/checkout"

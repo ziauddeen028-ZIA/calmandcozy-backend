@@ -192,7 +192,7 @@ export default function Shop() {
               onChange={() => setSelectedCategory("all")}
               className="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-900"
             />
-            <span className={`text-sm ${selectedCategory === "all" ? "text-gray-900 font-medium" : "text-gray-500 group-hover:text-gray-900 transition-colors"}`}>
+            <span className={`text-sm font-satoshi ${selectedCategory === "all" ? "text-gray-900 font-medium" : "text-gray-500 group-hover:text-gray-900 transition-colors"}`}>
               All Categories
             </span>
           </label>
@@ -205,7 +205,7 @@ export default function Shop() {
                 onChange={() => setSelectedCategory(slug)}
                 className="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-900"
               />
-              <span className={`text-sm ${selectedCategory === slug ? "text-gray-900 font-medium" : "text-gray-500 group-hover:text-gray-900 transition-colors"}`}>
+              <span className={`text-sm font-satoshi ${selectedCategory === slug ? "text-gray-900 font-medium" : "text-gray-500 group-hover:text-gray-900 transition-colors"}`}>
                 {label}
               </span>
             </label>
@@ -217,7 +217,7 @@ export default function Shop() {
       <div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Max Price</h3>
-          <span className="text-sm font-medium text-gray-900">₹{maxPrice}</span>
+          <span className="text-sm font-medium text-gray-900 font-satoshi">₹{maxPrice}</span>
         </div>
         <input
           type="range"
@@ -228,7 +228,7 @@ export default function Shop() {
           onChange={(e) => setMaxPrice(Number(e.target.value))}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-gray-900"
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-2">
+        <div className="flex justify-between text-xs text-gray-500 mt-2 font-satoshi">
           <span>₹0</span>
           <span>₹{absoluteMaxPrice}</span>
         </div>
