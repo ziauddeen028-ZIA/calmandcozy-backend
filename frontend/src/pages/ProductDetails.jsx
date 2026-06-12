@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiShoppingCart, FiHeart, FiCheck, FiArrowLeft, FiUpload } from 'react-icons/fi';
+import { FiShoppingCart, FiHeart, FiCheck, FiArrowLeft, FiUpload, FiStar } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import api from '../lib/api';
 import Loader from '../components/Loader';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import ProductReviews from '../components/ProductReviews';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
 
@@ -49,6 +50,9 @@ export default function ProductDetails() {
   const [backImageFile, setBackImageFile] = useState(null);
   const [backImagePreview, setBackImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  const [avgRating, setAvgRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
 
   // Variant-based selection (for non-customizable apparel with variants)
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -692,6 +696,19 @@ export default function ProductDetails() {
             <h1 className="mt-2 text-4xl font-bold text-gray-800 tracking-tight">
               {title}
             </h1>
+            
+            {reviewCount > 0 && (
+              <div className="flex items-center gap-2 mt-3">
+                <div className="flex items-center">
+                  <FiStar className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  <span className="ml-1.5 font-bold text-gray-800">{avgRating}</span>
+                </div>
+                <span className="text-gray-400 text-sm">({reviewCount} review{reviewCount !== 1 ? 's' : ''})</span>
+                <span className="text-gray-300 mx-2">|</span>
+                <a href="#reviews" className="text-indigo-600 text-sm font-medium hover:underline">Read Reviews</a>
+              </div>
+            )}
+
             {bundleOfferEnabled && (
               <div className="inline-flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-4 bg-green-50 text-green-800 text-sm font-bold px-4 py-2.5 rounded-xl border border-green-200 shadow-sm">
                 <span className="flex items-center gap-2">
@@ -1007,6 +1024,16 @@ export default function ProductDetails() {
             </button>
           </div>
         </div>
+      </div>
+      
+      <div id="reviews">
+        <ProductReviews 
+          productId={product.documentId} 
+          onStatsCalculated={(avg, count) => {
+            setAvgRating(avg);
+            setReviewCount(count);
+          }} 
+        />
       </div>
     </motion.div>
   );
