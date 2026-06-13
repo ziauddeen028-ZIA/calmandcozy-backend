@@ -118,10 +118,7 @@ export default function ProductDetails() {
         } else if (productData.colorVariants?.length > 0) {
           setSelectedColor(productData.colorVariants[0].colorName);
         } else if (productData?.images?.length > 0) {
-          setActiveImage(
-            productData.images?.[1]?.url ||
-            productData.images?.[0]?.url
-          );
+          setActiveImage(productData.images?.[0]?.url);
         }
 
         if (savedSize) {
@@ -138,7 +135,11 @@ export default function ProductDetails() {
 
     fetchProduct();
   }, [id]);
-
+  useEffect(() => {
+    if (!activeImage && product?.images?.length > 0) {
+      setActiveImage(product.images[0].url);
+    }
+  }, [product, activeImage]);
   const { addToCart } = useCart();
 
   const handleImageUpload = (e) => {
@@ -385,7 +386,7 @@ export default function ProductDetails() {
   }
 
   const { title, description, sellingPrice, actualPrice, category, stock, images, bundleOfferEnabled, bundleQty, bundlePrice } = product;
-  const galleryImages = images?.slice(1) || [];
+  const galleryImages = images || [];
   const inWishlist = isInWishlist(product.documentId);
 
   // Add to Cart button disabled states
@@ -696,7 +697,7 @@ export default function ProductDetails() {
             <h1 className="mt-2 text-4xl font-bold text-gray-800 tracking-tight">
               {title}
             </h1>
-            
+
             {reviewCount > 0 && (
               <div className="flex items-center gap-2 mt-3">
                 <div className="flex items-center">
@@ -1025,14 +1026,14 @@ export default function ProductDetails() {
           </div>
         </div>
       </div>
-      
+
       <div id="reviews">
-        <ProductReviews 
-          productId={product.documentId} 
+        <ProductReviews
+          productId={product.documentId}
           onStatsCalculated={(avg, count) => {
             setAvgRating(avg);
             setReviewCount(count);
-          }} 
+          }}
         />
       </div>
     </motion.div>

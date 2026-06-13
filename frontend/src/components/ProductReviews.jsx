@@ -64,7 +64,7 @@ export default function ProductReviews({ productId, onStatsCalculated }) {
           // Note: approved is false by default in Strapi
         }
       });
-      toast.success('Review submitted successfully and is pending approval.');
+      toast.success('Review submitted successfully');
       setCustomerName('');
       setRating(0);
       setReviewText('');
