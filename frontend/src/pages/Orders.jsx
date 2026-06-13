@@ -175,7 +175,7 @@ export default function Orders() {
                                     src={
                                       item.previewImageUrl?.startsWith("http")
                                         ? item.previewImageUrl
-                                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.previewImageUrl}`
+                                        : `${import.meta.env.VITE_API_URL}${item.previewImageUrl}`
                                     }
                                     alt={item.productName}
                                     className="w-16 h-16 rounded-lg object-contain bg-white border border-gray-200"
@@ -185,7 +185,7 @@ export default function Orders() {
                                     src={
                                       item.productImage?.startsWith("http")
                                         ? item.productImage
-                                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.productImage}`
+                                        : `${import.meta.env.VITE_API_URL}${item.productImage}`
                                     }
                                     alt={item.productName}
                                     className="w-16 h-16 rounded-lg object-cover border border-gray-200"

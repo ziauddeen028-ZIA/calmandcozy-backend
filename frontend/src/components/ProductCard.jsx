@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProductCard({ product }) {
   const { documentId, title, sellingPrice, actualPrice, category, images, customizable, bundleOfferEnabled, bundleQty, bundlePrice } = product;
@@ -22,7 +22,7 @@ export default function ProductCard({ product }) {
   const getImageUrl = (img) => {
     if (!img) return 'https://via.placeholder.com/400x400?text=No+Image';
     if (img.url.startsWith('http')) return img.url;
-    return (import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337') + img.url;
+    return (import.meta.env.VITE_API_URL) + img.url;
   };
 
   const imageUrl =

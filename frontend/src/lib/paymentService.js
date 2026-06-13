@@ -1,4 +1,4 @@
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 const STRAPI_API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 function getHeaders(supabaseId) {
@@ -19,7 +19,7 @@ function getHeaders(supabaseId) {
  * @returns {Promise<Object>} The Razorpay order details.
  */
 export async function createPaymentOrder(supabaseId, amount) {
-  const res = await fetch(`${STRAPI_URL}/api/payment/create-order`, {
+  const res = await fetch(`${API_URL}/api/payment/create-order`, {
     method: 'POST',
     headers: getHeaders(supabaseId),
     body: JSON.stringify({ amount }),

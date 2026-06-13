@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
-const API_URL = `${STRAPI_URL}/api`;
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const getHeaders = (supabaseId) => ({
   'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ const getHeaders = (supabaseId) => ({
 
 export const fetchCart = async (supabaseId) => {
   try {
-    const response = await axios.get(`${API_URL}/carts`, {
+    const response = await axios.get(`${API_URL}/api/carts`, {
       headers: getHeaders(supabaseId),
     });
     return response.data.data;
@@ -23,7 +23,7 @@ export const fetchCart = async (supabaseId) => {
 export const addToCart = async (supabaseId, productDocumentId, quantity = 1, customization = {}) => {
   try {
     const response = await axios.post(
-      `${API_URL}/carts`,
+      `${API_URL}/api/carts`,
       {
         data: {
           product: productDocumentId,
@@ -43,7 +43,7 @@ export const addToCart = async (supabaseId, productDocumentId, quantity = 1, cus
 export const updateCartQuantity = async (supabaseId, cartDocumentId, quantity) => {
   try {
     const response = await axios.put(
-      `${API_URL}/carts/${cartDocumentId}`,
+      `${API_URL}/api/carts/${cartDocumentId}`,
       {
         data: {
           quantity: quantity,
@@ -60,7 +60,7 @@ export const updateCartQuantity = async (supabaseId, cartDocumentId, quantity) =
 
 export const removeFromCart = async (supabaseId, cartDocumentId) => {
   try {
-    const response = await axios.delete(`${API_URL}/carts/${cartDocumentId}`, {
+    const response = await axios.delete(`${API_URL}/api/carts/${cartDocumentId}`, {
       headers: getHeaders(supabaseId),
     });
     return response.data.data;
@@ -73,7 +73,7 @@ export const removeFromCart = async (supabaseId, cartDocumentId) => {
 export const clearCart = async (supabaseId) => {
   try {
     const response = await axios.delete(
-      `${API_URL}/cart-clear`,
+      `${API_URL}/api/cart-clear`,
       {
         headers: getHeaders(supabaseId),
       }

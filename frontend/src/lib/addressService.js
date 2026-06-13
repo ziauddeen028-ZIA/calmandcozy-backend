@@ -6,7 +6,7 @@
  * The caller must always pass the Supabase user ID.
  */
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 const STRAPI_API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 function getHeaders(supabaseId) {
@@ -27,7 +27,7 @@ function getHeaders(supabaseId) {
  */
 export async function fetchAddresses(supabaseId) {
   console.log('[Address] Fetch Started');
-  const res = await fetch(`${STRAPI_URL}/api/addresses`, {
+  const res = await fetch(`${API_URL}/api/addresses`, {
     headers: getHeaders(supabaseId),
   });
 
@@ -50,7 +50,7 @@ export async function fetchAddresses(supabaseId) {
  */
 export async function createAddress(supabaseId, addressData) {
   console.log('[Address] Create Started');
-  const res = await fetch(`${STRAPI_URL}/api/addresses`, {
+  const res = await fetch(`${API_URL}/api/addresses`, {
     method: 'POST',
     headers: getHeaders(supabaseId),
     body: JSON.stringify({ data: addressData }),
@@ -76,7 +76,7 @@ export async function createAddress(supabaseId, addressData) {
  */
 export async function updateAddress(supabaseId, addressId, addressData) {
   console.log('[Address] Update Started — id:', addressId);
-  const res = await fetch(`${STRAPI_URL}/api/addresses/${addressId}`, {
+  const res = await fetch(`${API_URL}/api/addresses/${addressId}`, {
     method: 'PUT',
     headers: getHeaders(supabaseId),
     body: JSON.stringify({ data: addressData }),
@@ -101,7 +101,7 @@ export async function updateAddress(supabaseId, addressId, addressData) {
  */
 export async function deleteAddress(supabaseId, addressId) {
   console.log('[Address] Delete Started — id:', addressId);
-  const res = await fetch(`${STRAPI_URL}/api/addresses/${addressId}`, {
+  const res = await fetch(`${API_URL}/api/addresses/${addressId}`, {
     method: 'DELETE',
     headers: getHeaders(supabaseId),
   });

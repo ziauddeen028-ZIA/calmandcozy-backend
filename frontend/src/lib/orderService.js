@@ -1,4 +1,4 @@
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 const STRAPI_API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 function getHeaders(supabaseId) {
@@ -20,7 +20,7 @@ function getHeaders(supabaseId) {
 export async function fetchOrders(supabaseId) {
   console.log('[Order] Fetch Started');
   // Add populate=* to get order items
-  const res = await fetch(`${STRAPI_URL}/api/orders?filters[supabaseId][$eq]=${supabaseId}&populate=*&sort=createdAt:desc`, {
+  const res = await fetch(`${API_URL}/api/orders?filters[supabaseId][$eq]=${supabaseId}&populate=*&sort=createdAt:desc`, {
     headers: getHeaders(supabaseId),
   });
 
@@ -43,7 +43,7 @@ export async function fetchOrders(supabaseId) {
  */
 export async function fetchOrderById(supabaseId, documentId) {
   console.log('[Order] Fetch By Id Started:', documentId);
-  const res = await fetch(`${STRAPI_URL}/api/orders/${documentId}?populate=*`, {
+  const res = await fetch(`${API_URL}/api/orders/${documentId}?populate=*`, {
     headers: getHeaders(supabaseId),
   });
 
@@ -70,7 +70,7 @@ export async function fetchOrderById(supabaseId, documentId) {
  */
 export async function createOrder(supabaseId, orderData) {
   console.log('[Order] Create Started');
-  const res = await fetch(`${STRAPI_URL}/api/orders`, {
+  const res = await fetch(`${API_URL}/api/orders`, {
     method: 'POST',
     headers: getHeaders(supabaseId),
     body: JSON.stringify({ data: { ...orderData, supabaseId } }),

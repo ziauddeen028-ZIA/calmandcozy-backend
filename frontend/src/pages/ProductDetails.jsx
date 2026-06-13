@@ -9,13 +9,13 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import ProductReviews from '../components/ProductReviews';
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getImageUrl = (url) => {
   if (!url) return "";
   return url.startsWith("http")
     ? url
-    : `${STRAPI_URL}${url}`;
+    : `${API_URL}${url}`;
 };
 
 // Preferred display order for sizes

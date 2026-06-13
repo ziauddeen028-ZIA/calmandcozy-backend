@@ -20,7 +20,7 @@ export default function Checkout() {
   const [addressesLoading, setAddressesLoading] = useState(true);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
 
-  const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     async function loadAddresses() {
@@ -80,7 +80,7 @@ export default function Checkout() {
             // Payment successful, now create the Strapi order
             const helperGetImageUrl = (url) => {
               if (!url) return "";
-              return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
+              return url.startsWith("http") ? url : `${API_URL}${url}`;
             };
 
             const captureMockup = async (containerDOM) => {
@@ -324,7 +324,7 @@ export default function Checkout() {
 
   const getImageUrl = (url) => {
     if (!url) return "";
-    return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
+    return url.startsWith("http") ? url : `${API_URL}${url}`;
   };
 
   return (
@@ -428,13 +428,13 @@ export default function Checkout() {
                   ? (
                     item.previewImageUrl.startsWith("http")
                       ? item.previewImageUrl
-                      : `${STRAPI_URL}${item.previewImageUrl}`
+                      : `${API_URL}${item.previewImageUrl}`
                   )
                   : product?.images?.[0]?.url
                     ? (
                       product.images[0].url.startsWith("http")
                         ? product.images[0].url
-                        : `${STRAPI_URL}${product.images[0].url}`
+                        : `${API_URL}${product.images[0].url}`
                     )
                     : "https://via.placeholder.com/300";
 

@@ -1,5 +1,4 @@
-const STRAPI_URL =
-    import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const STRAPI_API_TOKEN =
     import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -27,7 +26,7 @@ export async function fetchWishlist(supabaseId) {
     console.log('[Wishlist] Fetch Started');
 
     const res = await fetch(
-        `${STRAPI_URL}/api/wishlists`,
+        `${API_URL}/api/wishlists`,
         {
             headers: getHeaders(supabaseId),
         }
@@ -68,7 +67,7 @@ export async function addToWishlist(
     );
 
     const res = await fetch(
-        `${STRAPI_URL}/api/wishlists`,
+        `${API_URL}/api/wishlists`,
         {
             method: 'POST',
             headers: getHeaders(supabaseId),
@@ -113,7 +112,7 @@ export async function removeFromWishlist(
     );
 
     const res = await fetch(
-        `${STRAPI_URL}/api/wishlists/${documentId}`,
+        `${API_URL}/api/wishlists/${documentId}`,
         {
             method: 'DELETE',
             headers: getHeaders(supabaseId),

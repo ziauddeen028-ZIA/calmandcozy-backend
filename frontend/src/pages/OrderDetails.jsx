@@ -125,7 +125,7 @@ export default function OrderDetails() {
                     src={
                       item.previewImageUrl?.startsWith("http")
                         ? item.previewImageUrl
-                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.previewImageUrl}`
+                        : `${import.meta.env.VITE_API_URL}${item.previewImageUrl}`
                     }
                     alt={item.productName}
                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-contain bg-white border border-gray-200"
@@ -135,7 +135,7 @@ export default function OrderDetails() {
                     src={
                       item.productImage?.startsWith("http")
                         ? item.productImage
-                        : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.productImage}`
+                        : `${import.meta.env.VITE_API_URL}${item.productImage}`
                     }
                     alt={item.productName}
                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border border-gray-200 flex-shrink-0"
@@ -162,7 +162,7 @@ export default function OrderDetails() {
                                 src={
                                   item.uploadedImageUrl.startsWith("http")
                                     ? item.uploadedImageUrl
-                                    : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.uploadedImageUrl}`
+                                    : `${import.meta.env.VITE_API_URL}${item.uploadedImageUrl}`
                                 }
                                 alt="Custom"
                                 className="h-8 w-8 object-cover rounded border border-gray-200 bg-white"
@@ -176,7 +176,7 @@ export default function OrderDetails() {
                                 src={
                                   item.backImageUrl.startsWith("http")
                                     ? item.backImageUrl
-                                    : `${import.meta.env.VITE_STRAPI_URL || "http://localhost:1337"}${item.backImageUrl}`
+                                    : `${import.meta.env.VITE_API_URL}${item.backImageUrl}`
                                 }
                                 alt="Back Custom"
                                 className="h-8 w-8 object-cover rounded border border-gray-200 bg-white"

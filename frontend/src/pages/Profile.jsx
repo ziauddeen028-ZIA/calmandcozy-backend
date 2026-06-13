@@ -13,7 +13,7 @@ export default function Profile() {
   const [phone, setPhone] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   
-  const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+  const API_URL = import.meta.env.VITE_API_URL;
   const STRAPI_API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function Profile() {
         headers['Authorization'] = `Bearer ${STRAPI_API_TOKEN}`;
       }
 
-      const res = await fetch(`${STRAPI_URL}/api/customers/${customer.documentId}`, {
+      const res = await fetch(`${API_URL}/api/customers/${customer.documentId}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify({

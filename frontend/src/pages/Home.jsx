@@ -88,7 +88,7 @@ export default function Home() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${import.meta.env.VITE_STRAPI_URL}/api/products?filters[featured][$eq]=true&populate=*`
+          `${import.meta.env.VITE_API_URL}/api/products?filters[featured][$eq]=true&populate=*`
         );
         setFeaturedProducts(response.data.data || []);
       } catch (err) {
@@ -105,7 +105,7 @@ export default function Home() {
   const fetchHomepageFeaturedProduct = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_STRAPI_URL}/api/products?filters[homepageFeatured][$eq]=true&populate=*`
+        `${import.meta.env.VITE_API_URL}/api/products?filters[homepageFeatured][$eq]=true&populate=*`
       );
 
       setHomepageFeaturedProduct(response.data.data?.[0] || null);

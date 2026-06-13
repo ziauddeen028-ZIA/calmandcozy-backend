@@ -18,7 +18,7 @@ export default function Cart() {
     appliedBundles,
   } = useCart();
 
-  const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   if (loading) {
     return (
@@ -89,13 +89,13 @@ export default function Cart() {
               ? (
                 item.previewImageUrl.startsWith("http")
                   ? item.previewImageUrl
-                  : `${STRAPI_URL}${item.previewImageUrl}`
+                  : `${API_URL}${item.previewImageUrl}`
               )
               : product?.images?.[0]?.url
                 ? (
                   product.images[0].url.startsWith("http")
                     ? product.images[0].url
-                    : `${STRAPI_URL}${product.images[0].url}`
+                    : `${API_URL}${product.images[0].url}`
                 )
                 : "https://via.placeholder.com/300";
             console.log(item);
@@ -140,7 +140,7 @@ export default function Cart() {
                               src={
                                 item.previewImageUrl?.startsWith("http")
                                   ? item.previewImageUrl
-                                  : `${STRAPI_URL}${item.previewImageUrl}`
+                                  : `${API_URL}${item.previewImageUrl}`
                               }
                               alt="Preview"
                               className="h-12 w-12 object-contain rounded border border-gray-200 bg-white"
@@ -153,7 +153,7 @@ export default function Cart() {
                               src={
                                 item.uploadedImageUrl?.startsWith("http")
                                   ? item.uploadedImageUrl
-                                  : `${STRAPI_URL}${item.uploadedImageUrl}`
+                                  : `${API_URL}${item.uploadedImageUrl}`
                               }
                               alt="Custom"
                               className="h-8 w-8 object-cover rounded border border-gray-200 bg-white"
@@ -167,7 +167,7 @@ export default function Cart() {
                               src={
                                 item.backImageUrl?.startsWith("http")
                                   ? item.backImageUrl
-                                  : `${STRAPI_URL}${item.backImageUrl}`
+                                  : `${API_URL}${item.backImageUrl}`
                               }
                               alt="Back Custom"
                               className="h-8 w-8 object-cover rounded border border-gray-200 bg-white"

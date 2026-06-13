@@ -4,7 +4,7 @@
  * Provides find and create operations keyed by supabase_id.
  */
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const API_URL = import.meta.env.VITE_API_URL;
 const STRAPI_API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 
 function getHeaders() {
@@ -21,7 +21,7 @@ function getHeaders() {
  */
 export async function fetchCustomerBySupabaseId(supabaseId) {
   const res = await fetch(
-    `${STRAPI_URL}/api/customers?filters[supabase_id][$eq]=${encodeURIComponent(supabaseId)}`,
+    `${API_URL}/api/customers?filters[supabase_id][$eq]=${encodeURIComponent(supabaseId)}`,
     { headers: getHeaders() }
   );
 
@@ -42,7 +42,7 @@ export async function fetchCustomerBySupabaseId(supabaseId) {
  * Returns the created customer object.
  */
 export async function createCustomer({ full_name, email, supabase_id, avatar_letter }) {
-  const res = await fetch(`${STRAPI_URL}/api/customers`, {
+  const res = await fetch(`${API_URL}/api/customers`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify({
