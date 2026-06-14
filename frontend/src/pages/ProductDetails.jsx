@@ -243,131 +243,131 @@ export default function ProductDetails() {
     setAddingToCart(true);
     try {
       // ── Variant-based (apparel) product ──
-    if (hasVariants) {
-      if (!selectedVariant) {
-        return toast.error('Please select a size');
-      }
-      if (selectedVariant.stock <= 0) {
-        return toast.error('Selected size is out of stock');
-      }
-
-      addToCart(product.documentId, 1, {
-        variantId: selectedVariant.id,
-        variantSize: selectedVariant.size,
-        selectedSize: selectedVariant.size,
-      });
-      return;
-    }
-
-    // ── Customizable product ──
-    if (product.stock <= 0) return;
-
-    if (product.customizable) {
-      if (product.customizationType === 't-shirt') {
-        if (!selectedColor && product.colorVariants?.length > 0) return toast.error('Please select a color');
-        if (!selectedSize && product.availableSizes?.length > 0) return toast.error('Please select a size');
-        if (!uploadedImageFile) {
-          return toast.error("Please upload front design");
+      if (hasVariants) {
+        if (!selectedVariant) {
+          return toast.error('Please select a size');
+        }
+        if (selectedVariant.stock <= 0) {
+          return toast.error('Selected size is out of stock');
         }
 
-        if (!backImageFile) {
-          return toast.error("Please upload back design");
-        }
-      }
-      if (product.customizationType === 'mug') {
-        if (!selectedColor && product.availableColors?.length > 0) {
-          return toast.error('Please select a mug color');
-        }
-
-        if (!uploadedImageFile) {
-          return toast.error('Please upload an image');
-        }
+        await addToCart(product.documentId, 1, {
+          variantId: selectedVariant.id,
+          variantSize: selectedVariant.size,
+          selectedSize: selectedVariant.size,
+        });
+        return;
       }
 
-      let uploadedImageUrl = null;
-      let backImageUrl = null;
-      let previewImageUrl = null;
-      let previewImageId = null;
+      // ── Customizable product ──
+      if (product.stock <= 0) return;
 
-      if (uploadedImageFile || backImageFile || customText) {
-        setIsUploading(true);
-        try {
-          if (uploadedImageFile) {
-            const formData = new FormData();
-            formData.append('files', uploadedImageFile);
-            const uploadRes = await api.post('/upload', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            uploadedImageUrl = uploadRes.data[0].url;
-          }
-          if (backImageFile) {
-            const formData = new FormData();
-            formData.append('files', backImageFile);
-
-            const uploadRes = await api.post('/upload', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' },
-            });
-
-            backImageUrl = uploadRes.data[0].url;
+      if (product.customizable) {
+        if (product.customizationType === 't-shirt') {
+          if (!selectedColor && product.colorVariants?.length > 0) return toast.error('Please select a color');
+          if (!selectedSize && product.availableSizes?.length > 0) return toast.error('Please select a size');
+          if (!uploadedImageFile) {
+            return toast.error("Please upload front design");
           }
 
-          const variant = product.colorVariants?.find(
-            v =>
-              v.colorName?.trim().toLowerCase() ===
-              selectedColor?.trim().toLowerCase()
-          );
-          const frontImg = variant?.frontImage?.url;
-          console.log("selectedColor", selectedColor);
-          console.log("variant", variant);
+          if (!backImageFile) {
+            return toast.error("Please upload back design");
+          }
+        }
+        if (product.customizationType === 'mug') {
+          if (!selectedColor && product.availableColors?.length > 0) {
+            return toast.error('Please select a mug color');
+          }
 
-          if (frontImg) {
-            const previewBlob = await generatePreviewCanvas(
-              getImageUrl(frontImg),
-              uploadedImagePreview,
-              customText
-            );
+          if (!uploadedImageFile) {
+            return toast.error('Please upload an image');
+          }
+        }
 
-            if (previewBlob) {
-              const previewFile = new File([previewBlob], 'preview.png', { type: 'image/png' });
-              const previewFormData = new FormData();
-              previewFormData.append('files', previewFile);
-              const previewRes = await api.post('/upload', previewFormData, {
+        let uploadedImageUrl = null;
+        let backImageUrl = null;
+        let previewImageUrl = null;
+        let previewImageId = null;
+
+        if (uploadedImageFile || backImageFile || customText) {
+          setIsUploading(true);
+          try {
+            if (uploadedImageFile) {
+              const formData = new FormData();
+              formData.append('files', uploadedImageFile);
+              const uploadRes = await api.post('/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
               });
-              previewImageUrl = previewRes.data[0].url;
-              previewImageId = previewRes.data[0].id;
+              uploadedImageUrl = uploadRes.data[0].url;
             }
+            if (backImageFile) {
+              const formData = new FormData();
+              formData.append('files', backImageFile);
+
+              const uploadRes = await api.post('/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+              });
+
+              backImageUrl = uploadRes.data[0].url;
+            }
+
+            const variant = product.colorVariants?.find(
+              v =>
+                v.colorName?.trim().toLowerCase() ===
+                selectedColor?.trim().toLowerCase()
+            );
+            const frontImg = variant?.frontImage?.url;
+            console.log("selectedColor", selectedColor);
+            console.log("variant", variant);
+
+            if (frontImg) {
+              const previewBlob = await generatePreviewCanvas(
+                getImageUrl(frontImg),
+                uploadedImagePreview,
+                customText
+              );
+
+              if (previewBlob) {
+                const previewFile = new File([previewBlob], 'preview.png', { type: 'image/png' });
+                const previewFormData = new FormData();
+                previewFormData.append('files', previewFile);
+                const previewRes = await api.post('/upload', previewFormData, {
+                  headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                previewImageUrl = previewRes.data[0].url;
+                previewImageId = previewRes.data[0].id;
+              }
+            }
+          } catch (err) {
+            console.error(err);
+            setIsUploading(false);
+            return toast.error('Failed to upload image or generate preview');
           }
-        } catch (err) {
-          console.error(err);
           setIsUploading(false);
-          return toast.error('Failed to upload image or generate preview');
         }
-        setIsUploading(false);
+
+        const customization = {
+          selectedColor,
+          selectedSize,
+          customText,
+
+          uploadedImageUrl,
+          backImageUrl,
+
+          previewImageUrl,
+          previewImageId,
+
+          logoPosition,
+          specialInstructions,
+        };
+
+        await addToCart(product.documentId, 1, customization);
+        localStorage.removeItem(`color_${id}`);
+        localStorage.removeItem(`size_${id}`);
+      } else {
+        // Plain product (no variants, not customizable)
+        await addToCart(product.documentId, 1);
       }
-
-      const customization = {
-        selectedColor,
-        selectedSize,
-        customText,
-
-        uploadedImageUrl,
-        backImageUrl,
-
-        previewImageUrl,
-        previewImageId,
-
-        logoPosition,
-        specialInstructions,
-      };
-
-      addToCart(product.documentId, 1, customization);
-      localStorage.removeItem(`color_${id}`);
-      localStorage.removeItem(`size_${id}`);
-    } else {
-      // Plain product (no variants, not customizable)
-      addToCart(product.documentId, 1);
-    }
     } finally {
       setAddingToCart(false);
     }
