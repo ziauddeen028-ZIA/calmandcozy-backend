@@ -12,6 +12,7 @@ export default function Profile() {
   
   const [phone, setPhone] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   
   const API_URL = import.meta.env.VITE_API_URL;
   const STRAPI_API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -23,8 +24,13 @@ export default function Profile() {
   }, [customer]);
 
   const handleLogout = async () => {
-    await signOut();
-    navigate('/');
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+      navigate('/');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const handleSave = async (e) => {
@@ -99,10 +105,20 @@ export default function Profile() {
               
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4"
+                disabled={isLoggingOut}
+                className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <FiLogOut className="mr-3 h-5 w-5 text-red-500" />
-                Logout
+                {isLoggingOut ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin mr-3" />
+                    Logging Out...
+                  </>
+                ) : (
+                  <>
+                    <FiLogOut className="mr-3 h-5 w-5 text-red-500" />
+                    Logout
+                  </>
+                )}
               </button>
             </nav>
           </div>
@@ -166,9 +182,16 @@ export default function Profile() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="inline-flex justify-center py-2.5 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center justify-center gap-2 py-2.5 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
                 >
-                  {isSaving ? 'Saving...' : 'Save Changes'}
+                  {isSaving ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
                 </button>
               </div>
             </form>

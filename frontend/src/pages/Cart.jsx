@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiTrash2, FiMinus, FiPlus, FiArrowRight } from "react-icons/fi";
 import { useCart } from "../context/CartContext";
@@ -19,6 +19,27 @@ export default function Cart() {
   } = useCart();
 
   const API_URL = import.meta.env.VITE_API_URL;
+
+  const [updatingId, setUpdatingId] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
+
+  const handleUpdateQuantity = async (documentId, newQuantity) => {
+    setUpdatingId(documentId);
+    try {
+      await updateQuantity(documentId, newQuantity);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleRemove = async (documentId) => {
+    setRemovingId(documentId);
+    try {
+      await removeFromCart(documentId);
+    } finally {
+      setRemovingId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -188,29 +209,44 @@ export default function Cart() {
                     {/* Quantity Controls */}
                     <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1">
                       <button
-                        onClick={() => updateQuantity(item.documentId, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                        className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-gray-600 shadow-sm hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                        onClick={() => handleUpdateQuantity(item.documentId, item.quantity - 1)}
+                        disabled={item.quantity <= 1 || updatingId === item.documentId || removingId === item.documentId}
+                        className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-gray-600 shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         <FiMinus className="h-4 w-4" />
                       </button>
-                      <span className="w-12 text-center text-sm font-semibold text-gray-900">
-                        {item.quantity}
+                      <span className="w-12 text-center flex justify-center items-center text-sm font-semibold text-gray-900">
+                        {updatingId === item.documentId ? (
+                          <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          item.quantity
+                        )}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.documentId, item.quantity + 1)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition-colors"
+                        onClick={() => handleUpdateQuantity(item.documentId, item.quantity + 1)}
+                        disabled={updatingId === item.documentId || removingId === item.documentId}
+                        className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-gray-600 shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         <FiPlus className="h-4 w-4" />
                       </button>
                     </div>
 
                     <button
-                      onClick={() => removeFromCart(item.documentId)}
-                      className="flex items-center gap-1 text-sm font-medium text-red-500 hover:text-red-600 transition-colors"
+                      onClick={() => handleRemove(item.documentId)}
+                      disabled={updatingId === item.documentId || removingId === item.documentId}
+                      className="flex items-center gap-1 text-sm font-medium text-red-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <FiTrash2 className="h-4 w-4" />
-                      <span>Remove</span>
+                      {removingId === item.documentId ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                          <span>Removing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <FiTrash2 className="h-4 w-4" />
+                          <span>Remove</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>

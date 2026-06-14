@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { FiShoppingCart, FiTrash2 } from 'react-icons/fi';
@@ -9,11 +9,27 @@ const Wishlist = () => {
   const { wishlist, loading, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
 
+  const [addingCartId, setAddingCartId] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
+
   const handleAddToCart = async (product, wishlistDocumentId) => {
-    const success = await addToCart(product.documentId, 1);
-    if (success) {
-      // Remove from wishlist after adding to cart, as per common UX
+    setAddingCartId(wishlistDocumentId);
+    try {
+      const success = await addToCart(product.documentId, 1);
+      if (success) {
+        await removeFromWishlist(wishlistDocumentId);
+      }
+    } finally {
+      setAddingCartId(null);
+    }
+  };
+
+  const handleRemove = async (wishlistDocumentId) => {
+    setRemovingId(wishlistDocumentId);
+    try {
       await removeFromWishlist(wishlistDocumentId);
+    } finally {
+      setRemovingId(null);
     }
   };
 
@@ -75,17 +91,32 @@ const Wishlist = () => {
                   <div className="mt-auto grid grid-cols-4 gap-2">
                     <button
                       onClick={() => handleAddToCart(product, item.documentId)}
-                      className="col-span-3 flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-white font-medium hover:bg-brand-600 transition-colors"
+                      disabled={addingCartId === item.documentId || removingId === item.documentId}
+                      className="col-span-3 flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-white font-medium hover:bg-brand-600 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      <FiShoppingCart className="w-4 h-4" />
-                      Add to Cart
+                      {addingCartId === item.documentId ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Adding...
+                        </>
+                      ) : (
+                        <>
+                          <FiShoppingCart className="w-4 h-4" />
+                          Add to Cart
+                        </>
+                      )}
                     </button>
                     <button
-                      onClick={() => removeFromWishlist(item.documentId)}
-                      className="col-span-1 flex items-center justify-center rounded-xl border border-gray-200 bg-white text-red-500 hover:bg-red-50 transition-colors"
+                      onClick={() => handleRemove(item.documentId)}
+                      disabled={addingCartId === item.documentId || removingId === item.documentId}
+                      className="col-span-1 flex items-center justify-center rounded-xl border border-gray-200 bg-white text-red-500 hover:bg-red-50 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                       title="Remove from Wishlist"
                     >
-                      <FiTrash2 className="w-5 h-5" />
+                      {removingId === item.documentId ? (
+                        <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <FiTrash2 className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>

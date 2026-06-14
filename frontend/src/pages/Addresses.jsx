@@ -247,9 +247,14 @@ function AddressFormModal({ initial, onSave, onCancel, isSaving }) {
             <button
               type="submit"
               disabled={isSaving}
-              className="flex-1 py-2.5 px-4 text-sm font-medium text-white bg-brand-600 rounded-lg hover:bg-brand-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 py-2.5 px-4 flex items-center justify-center gap-2 text-sm font-medium text-white bg-brand-600 rounded-lg hover:bg-brand-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
             >
-              {isSaving ? 'Saving...' : (initial ? 'Update Address' : 'Save Address')}
+              {isSaving ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Saving...
+                </>
+              ) : (initial ? 'Update Address' : 'Save Address')}
             </button>
             <button
               type="button"
@@ -319,7 +324,7 @@ function AddressCard({ address, onEdit, onDelete, onSetDefault, isDeleting }) {
 
 // ─── Sidebar (shared profile nav) ─────────────────────────────────────────────
 
-function ProfileSidebar({ onLogout }) {
+function ProfileSidebar({ onLogout, isLoggingOut }) {
   const location = useLocation();
   const navItems = [
     { name: 'Profile', path: '/profile', icon: FiUser },
@@ -348,10 +353,20 @@ function ProfileSidebar({ onLogout }) {
           })}
           <button
             onClick={onLogout}
-            className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4"
+            disabled={isLoggingOut}
+            className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <FiLogOut className="mr-3 h-5 w-5 text-red-500" />
-            Logout
+            {isLoggingOut ? (
+              <>
+                <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin mr-3" />
+                Logging Out...
+              </>
+            ) : (
+              <>
+                <FiLogOut className="mr-3 h-5 w-5 text-red-500" />
+                Logout
+              </>
+            )}
           </button>
         </nav>
       </div>
@@ -371,6 +386,7 @@ export default function Addresses() {
   const [loadingAddresses, setLoadingAddresses] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Modal state: null = closed, 'create' = new, address object = editing
   const [modal, setModal] = useState(null);
@@ -497,8 +513,13 @@ export default function Addresses() {
   };
 
   const handleLogout = async () => {
-    await signOut();
-    navigate('/');
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+      navigate('/');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   // ─── Render ────────────────────────────────────────────────────────────────
@@ -507,7 +528,7 @@ export default function Addresses() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col lg:flex-row gap-8">
 
-        <ProfileSidebar onLogout={handleLogout} />
+        <ProfileSidebar onLogout={handleLogout} isLoggingOut={isLoggingOut} />
 
         {/* Main content */}
         <div className="flex-1">
