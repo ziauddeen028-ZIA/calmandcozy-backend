@@ -10,6 +10,7 @@ import { createOrder } from '../lib/orderService';
 import { createPaymentOrder } from '../lib/paymentService';
 import html2canvas from 'html2canvas';
 import api from '../lib/api';
+import { FiCheckCircle } from 'react-icons/fi';
 
 export default function Checkout() {
   const { user } = useAuth();
