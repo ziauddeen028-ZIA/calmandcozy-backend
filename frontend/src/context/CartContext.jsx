@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { 
   fetchCart, 
@@ -14,6 +15,7 @@ const CartContext = createContext({});
 
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,7 +43,8 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (productDocumentId, quantity = 1, customization = {}) => {
     if (!user) {
-      toast.error('Please login first');
+      toast('Please sign in to continue.', { icon: '🔒' });
+      navigate('/login');
       return false;
     }
 

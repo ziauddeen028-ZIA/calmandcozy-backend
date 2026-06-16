@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { fetchWishlist, addToWishlist as apiAddToWishlist, removeFromWishlist as apiRemoveFromWishlist } from '../lib/wishlistService';
 import toast from 'react-hot-toast';
@@ -7,6 +8,7 @@ const WishlistContext = createContext({});
 
 export const WishlistProvider = ({ children }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +36,8 @@ export const WishlistProvider = ({ children }) => {
 
 const handleToggleWishlist = async (productDocumentId) => {
   if (!user) {
-    toast.error('Please login first');
+    toast('Please sign in to continue.', { icon: '🔒' });
+    navigate('/login');
     return false;
   }
 

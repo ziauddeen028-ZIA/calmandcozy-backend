@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { FiMail, FiLock, FiUser, FiCheckCircle } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -13,9 +12,9 @@ export default function Register() {
     confirmPassword: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  
+
   const { signUp } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,37 +45,14 @@ export default function Register() {
       });
 
       if (!error) {
-        setIsSuccess(true);
+        toast.success('Account created! Welcome to Calm&Cozy.');
+        navigate('/profile', { replace: true });
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isSuccess) {
-    return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center"
-      >
-        <FiCheckCircle className="mx-auto h-16 w-16 text-green-500" />
-        <h2 className="mt-4 text-2xl font-bold text-gray-900">Check your email</h2>
-        <p className="mt-2 text-gray-600">
-          We've sent a verification link to <span className="font-medium text-gray-900">{formData.email}</span>. 
-          Please verify your email to continue.
-        </p>
-        <div className="mt-8">
-          <Link
-            to="/login"
-            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors"
-          >
-            Return to Login
-          </Link>
-        </div>
-      </motion.div>
-    );
-  }
 
   return (
     <>

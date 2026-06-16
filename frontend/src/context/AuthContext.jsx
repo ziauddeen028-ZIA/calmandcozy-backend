@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }) => {
     password,
   }) => {
     try {
-      const { data, error } =
+      const { data: signUpData, error: signUpError } =
         await supabase.auth.signUp({
           email,
           password,
@@ -129,7 +129,13 @@ export const AuthProvider = ({ children }) => {
           },
         });
 
-      if (error) throw error;
+      if (signUpError) throw signUpError;
+
+      // Confirm Email is disabled — sign in immediately to create a session.
+      const { data, error: signInError } =
+        await supabase.auth.signInWithPassword({ email, password });
+
+      if (signInError) throw signInError;
 
       return { data, error: null };
     } catch (error) {

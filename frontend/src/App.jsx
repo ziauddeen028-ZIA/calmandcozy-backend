@@ -29,47 +29,47 @@ import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <BrowserRouter>
-          <ScrollToTop />
-        <Toaster position="top-center" />
-        <Routes>
-          {/* Main Layout routes */}
-          <Route path="/" element={<MainLayout />}>
-            {/* Public Routes */}
-            <Route index element={<Home />} />
-            <Route path="shop" element={<Shop />} />
-            <Route path="product/:id" element={<ProductDetails />} />
-            <Route path="privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="terms" element={<TermsAndConditions />} />
-            <Route path="refund-policy" element={<RefundPolicy />} />
-            <Route path="shipping-policy" element={<ShippingPolicy />} />
-            
-            {/* Protected Routes */}
-            <Route path="cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-            <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-            <Route path="wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-            <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="addresses" element={<ProtectedRoute><Addresses /></ProtectedRoute>} />
-            <Route path="orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-            <Route path="order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
-            <Route path="order-success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
-          </Route>
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <ScrollToTop />
+            <Toaster position="top-center" />
+            <Routes>
+              {/* Main Layout routes */}
+              <Route path="/" element={<MainLayout />}>
+                {/* Public Routes */}
+                <Route index element={<Home />} />
+                <Route path="shop" element={<Shop />} />
+                <Route path="product/:id" element={<ProductDetails />} />
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="terms" element={<TermsAndConditions />} />
+                <Route path="refund-policy" element={<RefundPolicy />} />
+                <Route path="shipping-policy" element={<ShippingPolicy />} />
 
-          {/* Auth Layout routes */}
-          <Route element={<AuthLayout />}>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="reset-password" element={<ResetPassword />} />
-          </Route>
-        </Routes>
-        </BrowserRouter>
-        </WishlistProvider>
-      </CartProvider>
-    </AuthProvider>
+                {/* Protected Routes */}
+                <Route path="cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+                <Route path="wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+                <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="addresses" element={<ProtectedRoute><Addresses /></ProtectedRoute>} />
+                <Route path="orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                <Route path="order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+                <Route path="order-success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
+              </Route>
+
+              {/* Auth Layout routes */}
+              <Route element={<AuthLayout />}>
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="forgot-password" element={<ForgotPassword />} />
+                <Route path="reset-password" element={<ResetPassword />} />
+              </Route>
+            </Routes>
+          </WishlistProvider>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
