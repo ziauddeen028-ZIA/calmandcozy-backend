@@ -755,7 +755,7 @@ export default function ProductDetails() {
                   key={index}
                   className="flex items-start gap-3 text-gray-700"
                 >
-                  <span className="text-indigo-600 mt-1">•</span>
+                  <span className="text-indigo-600">•</span>
                   <span>{line}</span>
                 </li>
               ))}
