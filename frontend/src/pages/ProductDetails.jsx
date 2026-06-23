@@ -748,8 +748,18 @@ export default function ProductDetails() {
             )}
           </div>
 
-          <div className="prose prose-lg text-gray-600 mb-8">
-            <p>{description}</p>
+          <div className="mb-8">
+            <ul className="space-y-3">
+              {description?.split("\n").map((line, index) => (
+                <li
+                  key={index}
+                  className="flex items-start gap-3 text-gray-700"
+                >
+                  <span className="text-indigo-600 mt-1">•</span>
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Stock indicator */}
@@ -989,9 +999,8 @@ export default function ProductDetails() {
           <div className="flex flex-col sm:flex-row gap-4 mt-auto border-t border-gray-100 pt-8">
             <button
               disabled={isAddToCartDisabled || addingToCart}
-              className={`flex-1 disabled:cursor-not-allowed text-white py-4 px-8 rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md ${
-                addedToCartCheck ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300'
-              }`}
+              className={`flex-1 disabled:cursor-not-allowed text-white py-4 px-8 rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md ${addedToCartCheck ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300'
+                }`}
               onClick={handleAddToCart}
             >
               {addingToCart ? (
