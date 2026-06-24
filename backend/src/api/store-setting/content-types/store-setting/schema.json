@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "store_settings",
+  "info": {
+    "singularName": "store-setting",
+    "pluralName": "store-settings",
+    "displayName": "Store Setting",
+    "description": "Global store configurations"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "codAdvanceAmount": {
+      "type": "decimal",
+      "default": 60,
+      "required": true
+    }
+  }
+}

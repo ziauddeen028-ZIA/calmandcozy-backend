@@ -91,6 +91,12 @@
       "type": "boolean",
       "private": true,
       "default": false
+    },
+    "codAdvanceAmount": {
+      "type": "decimal"
+    },
+    "balanceDueOnDelivery": {
+      "type": "decimal"
     }
   }
 }
