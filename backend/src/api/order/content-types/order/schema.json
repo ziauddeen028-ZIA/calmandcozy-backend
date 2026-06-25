@@ -50,7 +50,8 @@
         "pending",
         "paid",
         "failed",
-        "refunded"
+        "refunded",
+        "COD Fee Paid"
       ]
     },
     "orderStatus": {
@@ -91,6 +92,18 @@
       "type": "boolean",
       "private": true,
       "default": false
+    },
+    "productTotal": {
+      "type": "decimal"
+    },
+    "codFee": {
+      "type": "decimal"
+    },
+    "amountPaidOnline": {
+      "type": "decimal"
+    },
+    "amountToCollect": {
+      "type": "decimal"
     },
     "codAdvanceAmount": {
       "type": "decimal"
